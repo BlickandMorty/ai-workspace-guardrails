@@ -1,0 +1,7 @@
+reports/
+evidence/
+manifests/
+*.acl-backup
+*.private.json
+*.log
+*.zip
