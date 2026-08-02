@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "policyId": "example-project-boundary",
+  "projectId": "project-example",
+  "workspaceRoot": "C:\\GuardedWork\\Project-Example",
+  "evidenceRoot": "C:\\GuardedWorkEvidence\\Project-Example",
+  "denyReparsePoints": true,
+  "principals": [
+    {
+      "id": "operators",
+      "sid": "S-1-5-21-111111111-222222222-333333333-1001",
+      "roles": ["operator"]
+    },
+    {
+      "id": "reviewers",
+      "sid": "S-1-5-21-111111111-222222222-333333333-1002",
+      "roles": ["reviewer"]
+    },
+    {
+      "id": "automation",
+      "sid": "S-1-5-21-111111111-222222222-333333333-1100",
+      "roles": ["agent"]
+    }
+  ],
+  "roles": {
+    "operator": ["Read", "CreateOutput", "UpdateOutput"],
+    "reviewer": ["Read", "Review", "ApproveExport"],
+    "agent": ["Read", "CreateOutput", "UpdateOutput"],
+    "custodian": ["Read", "CreateOutput", "UpdateOutput", "Review", "ApproveExport", "Administer"]
+  },
+  "zones": [
+    {
+      "id": "input",
+      "relativePath": "input",
+      "classification": "restricted-input",
+      "allowedRoles": ["operator", "reviewer", "agent", "custodian"],
+      "allowedOperations": ["Read"],
+      "integrity": true
+    },
+    {
+      "id": "work",
+      "relativePath": "work",
+      "classification": "restricted-working",
+      "allowedRoles": ["operator", "agent", "custodian"],
+      "allowedOperations": ["Read", "CreateOutput", "UpdateOutput"],
+      "integrity": false
+    },
+    {
+      "id": "review",
+      "relativePath": "review",
+      "classification": "restricted-review",
+      "allowedRoles": ["reviewer", "custodian"],
+      "allowedOperations": ["Read", "Review", "ApproveExport"],
+      "integrity": true
+    },
+    {
+      "id": "approved-export",
+      "relativePath": "approved-export",
+      "classification": "approved-output",
+      "allowedRoles": ["reviewer", "custodian"],
+      "allowedOperations": ["Read", "ApproveExport"],
+      "integrity": true
+    }
+  ],
+  "neverExport": ["input", "work"],
+  "verification": {
+    "manifestName": "workspace.manifest.json",
+    "ledgerName": "guard-events.jsonl",
+    "taskName": "AIWorkspaceGuard-ProjectExample-Verify"
+  }
+}
